@@ -37,7 +37,7 @@ class Aplaceautocomplete extends Module
         $this->name = 'aplaceautocomplete';
         $this->tab = 'shipping_logistics';
         $this->module_key = '894aa3d5fffb5e1c99d1dc75576c71b6';
-        $this->version = '1.4.0';
+        $this->version = '1.5.0';
         $this->author = 'Muesli';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -432,11 +432,23 @@ class Aplaceautocomplete extends Module
                     $countriesData = Db::getInstance()->executeS($sqlCountries);
                     if ($countriesData) {
                         $this->context->smarty->assign('countries_data', $countriesData);
+                    } else {
+                        $sqlCountries = 'SELECT id_country, iso_code, active FROM `' . _DB_PREFIX_ . 'country`';
+                        $countriesData = Db::getInstance()->executeS($sqlCountries);
+                        if ($countriesData) {
+                            $this->context->smarty->assign('countries_data', $countriesData);
+                        }                                
                     }
                     $sqlStates = 'SELECT id_state, name FROM `' . pSQL(Configuration::get('APLACE_AUTOCOMPLETE_DB_TABLE_NAME_STATES')) . '`';
                     $statesData = Db::getInstance()->ExecuteS($sqlStates);
                     if ($statesData) {
                         $this->context->smarty->assign('states_data', $statesData);
+                    } else {
+                        $sqlStates = 'SELECT id_state, name FROM `' . _DB_PREFIX_ . 'state`';
+                        $statesData = Db::getInstance()->ExecuteS($sqlStates);
+                        if ($statesData) {
+                            $this->context->smarty->assign('states_data', $statesData);
+                        }    
                     }
                 } catch (Exception $e) {
                     echo $e->getMessage();

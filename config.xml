@@ -2,7 +2,7 @@
 <module>
     <name>aplaceautocomplete</name>
     <displayName><![CDATA[APlace Autocomplete]]></displayName>
-    <version><![CDATA[1.4.0]]></version>
+    <version><![CDATA[1.5.0]]></version>
     <description><![CDATA[Easily add address autocompletion in your customers' shopping cart form]]></description>
     <author><![CDATA[Muesli]]></author>
     <tab><![CDATA[shipping_logistics]]></tab>

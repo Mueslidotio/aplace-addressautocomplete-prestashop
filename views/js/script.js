@@ -28,16 +28,20 @@ const aplaceAutocompleteManager = () => {
             resultSelectedCallback: (result) => {
                 const selectCountry = document.querySelector('[name="' + aplace_autocomplete_field_country + '"]');
                 if (selectCountry) {
-                    if (result.address.country_code) {
-                        const country = aplace_countries_data.find((country) => country.iso_code === result.address.country_code);
-                        selectCountry.value = country.id_country;
+                    if (result?.address?.country_code) {
+                        const country = aplace_countries_data?.find((country) => country.iso_code === result.address.country_code);
+                        if (country) {
+                            selectCountry.value = country.id_country;
+                        }
                     }
                 }
                 const selectState = document.querySelector('[name="' + aplace_autocomplete_field_state + '"]');
                 if (selectState) {
-                    if (result.address.state_code) {
-                        const state = aplace_states_data.find((state) => state.name === result.address.state);
-                        selectState.value = state.id_state;
+                    if (result?.address?.state_code) {
+                        const state = aplace_states_data?.find((state) => state.name === result.address.state);
+                        if (state) {
+                            selectState.value = state.id_state;
+                        }
                     }
                 }
             }
