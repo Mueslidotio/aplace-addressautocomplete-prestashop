@@ -14,9 +14,27 @@
 
 const aplaceAutocompleteManager = () => {
     const inputNames = {};
-    inputNames[aplace_autocomplete_field_address] = { 'type': 'address' };
-    inputNames[aplace_autocomplete_field_city] = { 'type': 'city' };
-    inputNames[aplace_autocomplete_field_postcode] = { 'type': 'postcode' };
+
+    const getValidInputNameInPage = (inputNames) => {
+        for (const inputName of inputNames) {
+            if (inputName?.length > 0) {
+                const inputExists = document.querySelector('[name="' + inputName + '"]');
+                if (inputExists) {
+                    return inputName;
+                }
+            }
+        };
+        return null;
+    }
+    // address
+    const addressInputName = getValidInputNameInPage(aplace_autocomplete_field_address.split(','));
+    if (addressInputName) inputNames[addressInputName] = { 'type': 'address' };
+    // city
+    const cityInputName = getValidInputNameInPage(aplace_autocomplete_field_city.split(','));
+    if (cityInputName) inputNames[cityInputName] = { 'type': 'city' };
+    // postcode
+    const postcodeInputName = getValidInputNameInPage(aplace_autocomplete_field_postcode.split(','));
+    if (postcodeInputName) inputNames[postcodeInputName] = { 'type': 'postcode' };
     if (APlaceAutocomplete) {
         new APlaceAutocomplete({
             autoFill: true,

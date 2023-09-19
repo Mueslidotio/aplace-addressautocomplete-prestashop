@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Aplaceautocomplete' => $baseDir . '/aplaceautocomplete.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+    'CURLStringFile' => $vendorDir . '/symfony/polyfill-php81/Resources/stubs/CURLStringFile.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Composer\\Pcre\\MatchAllResult' => $vendorDir . '/composer/pcre/src/MatchAllResult.php',
     'Composer\\Pcre\\MatchAllWithOffsetsResult' => $vendorDir . '/composer/pcre/src/MatchAllWithOffsetsResult.php',

@@ -16,13 +16,13 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use phpseclib3\Crypt\AES;
-use phpseclib3\Crypt\Random;
+require __DIR__ . '/vendor/autoload.php';
 
 class Aplaceautocomplete extends Module
 {
     protected $config_form = false;
     private $defaultValues = [
+        'APLACE_AUTOCOMPLETE_LIVE_MODE' => false,
         'APLACE_AUTOCOMPLETE_NAME_ADDRESS' => 'address1',
         'APLACE_AUTOCOMPLETE_NAME_CITY' => 'city',
         'APLACE_AUTOCOMPLETE_NAME_POSTCODE' => 'postcode',
@@ -37,7 +37,7 @@ class Aplaceautocomplete extends Module
         $this->name = 'aplaceautocomplete';
         $this->tab = 'shipping_logistics';
         $this->module_key = '894aa3d5fffb5e1c99d1dc75576c71b6';
-        $this->version = '1.5.0';
+        $this->version = '1.6.0';
         $this->author = 'Muesli';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -52,8 +52,8 @@ class Aplaceautocomplete extends Module
     {
         return parent::install()
         && Configuration::updateValue('APLACE_AUTOCOMPLETE_MODULE_NAME', 'aplaceautocomplete_module')
-        && Configuration::updateValue('APLACEAUTOCOMPLETE_LIVE_MODE', false)
-        && Configuration::updateValue('APLACEAUTOCOMPLETE_INIT', false)
+        && Configuration::updateValue('APLACE_AUTOCOMPLETE_LIVE_MODE', false)
+        && Configuration::updateValue('APLACE_AUTOCOMPLETE_INIT', false)
         && Configuration::updateValue('APLACE_AUTOCOMPLETE_NAME_ADDRESS', $this->defaultValues['APLACE_AUTOCOMPLETE_NAME_ADDRESS'])
         && Configuration::updateValue('APLACE_AUTOCOMPLETE_NAME_CITY', $this->defaultValues['APLACE_AUTOCOMPLETE_NAME_CITY'])
         && Configuration::updateValue('APLACE_AUTOCOMPLETE_NAME_POSTCODE', $this->defaultValues['APLACE_AUTOCOMPLETE_NAME_POSTCODE'])
@@ -67,8 +67,8 @@ class Aplaceautocomplete extends Module
     public function uninstall()
     {
         return Configuration::deleteByName('APLACE_AUTOCOMPLETE_MODULE_NAME')
-        && Configuration::deleteByName('APLACEAUTOCOMPLETE_LIVE_MODE')
-        && Configuration::deleteByName('APLACEAUTOCOMPLETE_INIT')
+        && Configuration::deleteByName('APLACE_AUTOCOMPLETE_LIVE_MODE')
+        && Configuration::deleteByName('APLACE_AUTOCOMPLETE_INIT')
         && Configuration::deleteByName('APLACE_AUTOCOMPLETE_NAME_ADDRESS')
         && Configuration::deleteByName('APLACE_AUTOCOMPLETE_NAME_CITY')
         && Configuration::deleteByName('APLACE_AUTOCOMPLETE_NAME_POSTCODE')
@@ -82,8 +82,8 @@ class Aplaceautocomplete extends Module
     public function reset()
     {
         return Configuration::updateValue('APLACE_AUTOCOMPLETE_MODULE_NAME', 'aplaceautocomplete_module')
-        && Configuration::updateValue('APLACEAUTOCOMPLETE_LIVE_MODE', false)
-        && Configuration::updateValue('APLACEAUTOCOMPLETE_INIT', false)
+        && Configuration::updateValue('APLACE_AUTOCOMPLETE_LIVE_MODE', false)
+        && Configuration::updateValue('APLACE_AUTOCOMPLETE_INIT', false)
         && Configuration::updateValue('APLACE_AUTOCOMPLETE_NAME_ADDRESS', $this->defaultValues['APLACE_AUTOCOMPLETE_NAME_ADDRESS'])
         && Configuration::updateValue('APLACE_AUTOCOMPLETE_NAME_CITY', $this->defaultValues['APLACE_AUTOCOMPLETE_NAME_CITY'])
         && Configuration::updateValue('APLACE_AUTOCOMPLETE_NAME_POSTCODE', $this->defaultValues['APLACE_AUTOCOMPLETE_NAME_POSTCODE'])
@@ -100,7 +100,7 @@ class Aplaceautocomplete extends Module
         foreach (array_keys($form_values) as $key) {
             Configuration::updateValue($key, Tools::getValue($key));
         }
-        Configuration::updateValue('APLACEAUTOCOMPLETE_INIT', true);
+        Configuration::updateValue('APLACE_AUTOCOMPLETE_INIT', true);
     }
 
     protected function checkErrorInValues()
@@ -117,7 +117,7 @@ class Aplaceautocomplete extends Module
         if (((bool) Tools::isSubmit('submitAplaceautocompleteModule')) == true) {
             $this->postProcess();
         }
-        if (Configuration::get('APLACEAUTOCOMPLETE_INIT') === true) {
+        if (Configuration::get('APLACE_AUTOCOMPLETE_INIT') === true) {
             $this->checkErrorInValues();
         }
         $this->context->smarty->assign('module_dir', $this->_path);
@@ -163,7 +163,7 @@ class Aplaceautocomplete extends Module
             [
                 'type' => 'switch',
                 'label' => $this->l('Live mode'),
-                'name' => 'APLACEAUTOCOMPLETE_LIVE_MODE',
+                'name' => 'APLACE_AUTOCOMPLETE_LIVE_MODE',
                 'is_bool' => true,
                 'desc' => $this->l('Use this module in live mode'),
                 'values' => [
@@ -197,25 +197,25 @@ class Aplaceautocomplete extends Module
             ],
             [
                 'type' => 'text',
-                'label' => $this->l('Address field name'),
+                'label' => $this->l('Address field names'),
                 'name' => 'APLACE_AUTOCOMPLETE_NAME_ADDRESS',
-                'desc' => $this->l('Set the "name" attribute of the address field in the shipping information cart form (default: "address1")'),
+                'desc' => $this->l('Set the "name" attributes of the address fields in the forms where there is an address input (e.g. "address1"). You can set several values separated by a comma (e.g. "address1, address2").'),
                 'size' => 20,
                 'required' => true,
             ],
             [
                 'type' => 'text',
-                'label' => $this->l('City field name'),
+                'label' => $this->l('City field names'),
                 'name' => 'APLACE_AUTOCOMPLETE_NAME_CITY',
-                'desc' => $this->l('Set the "name" attribute of the city field in the shipping information cart form (default: "city")'),
+                'desc' => $this->l('Set the "name" attributes of the city fields in the forms where there is a city input (e.g. "city"). You can set several values separated by a comma (e.g. "city, city2")'),
                 'size' => 20,
                 'required' => true,
             ],
             [
                 'type' => 'text',
-                'label' => $this->l('Post code field name'),
+                'label' => $this->l('Post code field names'),
                 'name' => 'APLACE_AUTOCOMPLETE_NAME_POSTCODE',
-                'desc' => $this->l('Set the "name" attribute of the post code field in the shipping information cart form (default: "postcode")'),
+                'desc' => $this->l('Set the "name" attributes of the post code fields in the forms where there is a post code input (e.g. "postcode"). You can set several values separated by a comma (e.g. "postcode, postcode2")'),
                 'size' => 20,
                 'required' => true,
             ],
@@ -223,7 +223,7 @@ class Aplaceautocomplete extends Module
                 'type' => 'text',
                 'label' => $this->l('State select name'),
                 'name' => 'APLACE_AUTOCOMPLETE_NAME_STATE',
-                'desc' => $this->l('Set the "name" attribute of the state field in the shipping information cart form (default: "id_state")'),
+                'desc' => $this->l('Set the "name" attributes of the state fields in the forms where there is a state input (e.g. "id_state"). You can set several values separated by a comma (e.g. "id_state, id_state2")'),
                 'size' => 20,
                 'required' => true,
             ],
@@ -231,7 +231,7 @@ class Aplaceautocomplete extends Module
                 'type' => 'text',
                 'label' => $this->l('Country select name'),
                 'name' => 'APLACE_AUTOCOMPLETE_NAME_COUNTRY',
-                'desc' => $this->l('Set the "name" attribute of the country field in the shipping information cart form (default: "id_country")'),
+                'desc' => $this->l('Set the "name" attributes of the country fields in the forms where there is a country input (e.g. "id_country"). You can set several values separated by a comma (e.g. "id_country, id_country2")'),
                 'size' => 20,
                 'required' => true,
             ],
@@ -291,7 +291,7 @@ class Aplaceautocomplete extends Module
     protected function getConfigFormValues()
     {
         return [
-            'APLACEAUTOCOMPLETE_LIVE_MODE' => Configuration::get('APLACEAUTOCOMPLETE_LIVE_MODE', true),
+            'APLACE_AUTOCOMPLETE_LIVE_MODE' => Configuration::get('APLACE_AUTOCOMPLETE_LIVE_MODE', null),
             'APLACE_AUTOCOMPLETE_API_KEY' => Configuration::get('APLACE_AUTOCOMPLETE_API_KEY', null),
             'APLACE_AUTOCOMPLETE_ENCRYPTION_KEY' => Configuration::get('APLACE_AUTOCOMPLETE_ENCRYPTION_KEY', null),
             'APLACE_AUTOCOMPLETE_NAME_ADDRESS' => Configuration::get('APLACE_AUTOCOMPLETE_NAME_ADDRESS', $this->defaultValues['APLACE_AUTOCOMPLETE_NAME_ADDRESS']),
@@ -306,9 +306,11 @@ class Aplaceautocomplete extends Module
 
     protected function validateValues($formContent)
     {
+        // var_dump($formContent);
+        // exit();
         $validationChecks = [
-            'APLACEAUTOCOMPLETE_LIVE_MODE' => [
-                'type' => 'string',
+            'APLACE_AUTOCOMPLETE_LIVE_MODE' => [
+                'type' => 'boolean',
                 'name' => $this->l('Live mode'),
             ],
             'APLACE_AUTOCOMPLETE_API_KEY' => [
@@ -375,8 +377,8 @@ class Aplaceautocomplete extends Module
 
     public function hookDisplayHeader()
     {
-        if ($this->context->controller->page_name == 'checkout') {
-            $liveMode = Configuration::get('APLACEAUTOCOMPLETE_LIVE_MODE');
+        if ($this->context->controller->php_self == 'order' || $this->context->controller->php_self == 'address') {
+            $liveMode = Configuration::get('APLACE_AUTOCOMPLETE_LIVE_MODE');
             if ($liveMode) {
                 $aplaceToken = Configuration::get('APLACE_AUTOCOMPLETE_API_KEY');
                 if (!$aplaceToken) {
@@ -389,9 +391,9 @@ class Aplaceautocomplete extends Module
                 $messageData = $aplaceToken . '|' . $ttl;
                 $aplaceEncryptionKey = Configuration::get('APLACE_AUTOCOMPLETE_ENCRYPTION_KEY');
                 try {
-                    $aes = new AES('gcm');
+                    $aes = new phpseclib3\Crypt\AES('gcm');
                     $aes->setKey($aplaceEncryptionKey);
-                    $iv = Random::string(12);
+                    $iv = phpseclib3\Crypt\Random::string(12);
                     $aes->setNonce($iv);
                     $encrypted = $aes->encrypt($messageData);
                     $combinedEncrypted = $iv . $encrypted . $aes->getTag();
@@ -410,15 +412,19 @@ class Aplaceautocomplete extends Module
                     } catch (Exception $e) {
                         echo $e->getMessage();
                     }
-                    $this->context->controller->registerJavascript(
-                        'aplace-autocomplete',
-                        'https://aplace.io/' . $aplaceLang . '/scripts/autocomplete.js?key=' . $accessToken . '&from=pss&v=' . $this->version,
-                        [
-                            'server' => 'remote',
-                            'position' => 'bottom',
-                            'priority' => 150,
-                        ]
-                    );
+                    if (method_exists($this->context->controller, 'registerJavascript')) {
+                        $this->context->controller->registerJavascript(
+                            'aplace-autocomplete',
+                            'https://aplace.io/' . $aplaceLang . '/scripts/autocomplete.js?key=' . $accessToken . '&from=pss&v=' . $this->version,
+                            [
+                                'server' => 'remote',
+                                'position' => 'bottom',
+                                'priority' => 150,
+                            ]
+                        );
+                    } else {
+                        $this->context->controller->addJS('https://aplace.io/' . $aplaceLang . '/scripts/autocomplete.js?key=' . $accessToken . '&from=pss&v=' . $this->version);
+                    }
                 } catch (Exception $e) {
                     echo $e->getMessage();
                 }

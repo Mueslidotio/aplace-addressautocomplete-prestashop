@@ -1,5 +1,5 @@
-# aplace-addressautocomplete-magento
-Prestashop module of aplace autocomplete address
+# aplace-addressautocomplete-prestashop 1.6.0
+Prestashop 1.7 module of aplace autocomplete address
 
 This module adds address autocomplete in the checkout form using APlace.io service.
 
@@ -23,4 +23,4 @@ This module adds address autocomplete in the checkout form using APlace.io servi
 
 ### Note
 
-Tested on Prestashop 1.7.8
+Tested on Prestashop 1.7.8 with PHP 7.4.33

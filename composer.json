@@ -6,11 +6,8 @@
         "optimize-autoloader": true,
         "prepend-autoloader": false,
         "platform": {
-            "php": "7.2.5"
+            "php": "7.1"
         }
-    },
-    "require-dev": {
-        "prestashop/php-dev-tools": "^4.2.1"
     },
     "require": {
         "php": ">=5.6",
